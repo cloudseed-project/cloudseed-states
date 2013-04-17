@@ -1,4 +1,4 @@
-redis-server:
+mongodb:
   pkg:
     - installed
   service:
