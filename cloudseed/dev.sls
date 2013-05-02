@@ -1,6 +1,6 @@
 cloudseed.git:
   git.latest:
-    - name: https://github.com/cloudseed-project/cloudseed.git:
+    - name: https://github.com/cloudseed-project/cloudseed.git
     - rev: develop
     - target: /home/root/cloudseed
     - watch_in:
