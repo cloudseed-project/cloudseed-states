@@ -10,5 +10,3 @@ cloudseed.git:
     - name: https://github.com/cloudseed-project/cloudseed.git
     - rev: master
     - target: /root/cloudseed
-    - watch_in:
-      cmd: cloudseed.install
