@@ -1,7 +1,7 @@
 cloudseed.git:
   git.latest:
     - name: https://github.com/cloudseed-project/cloudseed.git
-    - rev: develop
+    - rev: master
     - target: /home/root/cloudseed
     - watch_in:
       cmd: cloudseed.install
