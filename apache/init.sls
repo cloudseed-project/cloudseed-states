@@ -11,3 +11,7 @@ apache:
   - name: apache2
   - running
   {% endif %}
+
+/tmp/foo:
+  file.directory:
+    - makedirs: True
