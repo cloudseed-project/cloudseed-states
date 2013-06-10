@@ -1,2 +1,2 @@
 include:
-  - cloudseed.dev
+  - cloudseed
