@@ -10,9 +10,3 @@ cloudseed.git:
     - name: https://github.com/cloudseed-project/cloudseed2.git
     - rev: master
     - target: /root/cloudseed
-
-cloudseed.agent:
-  cmd.run:
-    - name: cloudseed agent
-    - require:
-      - cmd: cloudseed.install
