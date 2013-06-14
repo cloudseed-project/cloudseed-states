@@ -9,22 +9,22 @@ php5-curl:
   pkg:
     - installed
     - watch_in:
-      - service: httpd
+      - service: apache
 
 php5-gd:
   pkg:
     - installed
     - watch_in:
-      - service: httpd
+      - service: apache
 
 libapache2-mod-php5:
   pkg:
     - installed
     - require:
-      - pkg: httpd
+      - pkg: apache
 
     - watch_in:
-      - service: httpd
+      - service: apache
 
 /etc/apache2/sites-available/default:
   file.managed:
@@ -38,4 +38,4 @@ a2enmod rewrite:
   cmd.run:
     - onlyif: test -e /etc/apache2/mods-enabled/rewrite.load
     - watch_in:
-      - service: httpd
+      - service: apache
