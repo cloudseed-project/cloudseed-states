@@ -5,6 +5,6 @@ base:
   'aventurella.local':
     - aventurella
 
-  'roles:lamp':
+  'roles:lamp-basic':
     - match: grain
-    - lamp
+    - lamp-basic
