@@ -2,12 +2,9 @@ base:
   'master':
     - master
 
-  'minion0':
-    - apache
-
   'aventurella.local':
     - aventurella
 
-  'role:lamp':
+  'roles:lamp':
     - match: grain
     - lamp
