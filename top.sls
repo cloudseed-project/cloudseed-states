@@ -7,3 +7,7 @@ base:
 
   'aventurella.local':
     - aventurella
+
+  'role:lamp':
+    - match: grain
+    - lamp
