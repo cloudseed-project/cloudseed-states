@@ -33,6 +33,8 @@ libapache2-mod-php5:
     - group: root
     - mode: 644
     - template: jinja
+    - watch_in:
+      - service: apache
 
 a2enmod rewrite:
   cmd.run:
