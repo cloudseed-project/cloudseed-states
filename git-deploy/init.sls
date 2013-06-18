@@ -4,6 +4,7 @@ git:
     - name: git-core
   {% elif grains['os'] == 'Debian' or grains['os'] == 'Ubuntu'%}
     - name: git
+  {% endif %}
 
   user.present:
     - require:
