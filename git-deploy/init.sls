@@ -9,7 +9,6 @@ git:
   user.present:
     - require:
       - group: git
-
     - groups:
       - git
 
@@ -34,5 +33,10 @@ git:
       - cmd: git init --bare
 
 git init --bare:
-  cmd.wait
+  cmd.wait:
+    - cwd: /var/git
+    - require:
+      - file: /var/git
+      - user: git
+      - group: git
 
