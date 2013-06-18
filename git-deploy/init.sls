@@ -6,6 +6,17 @@ git:
     - name: git
   {% endif %}
 
+  user.present:
+    - require:
+      - group: git
+
+    - groups:
+      - git
+
+  group.present:
+    - system: True
+
+
 
 /var/git:
   file.directory:
