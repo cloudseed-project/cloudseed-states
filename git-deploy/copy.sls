@@ -6,5 +6,6 @@ deploy.stage1:
 deploy.stage2:
   cmd.run:
     - name: GIT_WORK_TREE={{ salt['pillar.get']('git-deploy:cwd', '/var/www') }} git checkout -f
+    - cwd: /var/git
     - require:
       - file: deploy.stage1
