@@ -9,8 +9,8 @@ git:
 
 /var/git:
   file.directory:
-    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
-    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
+    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
+    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - mode: 755
     - makedirs: True
     - recurse:
@@ -32,8 +32,8 @@ git init --bare:
   file.managed:
     - source: salt://git-deploy/files/post-receive
     - template: jinja
-    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
-    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
+    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
+    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - mode: 755
     - require:
       - file: /var/git
