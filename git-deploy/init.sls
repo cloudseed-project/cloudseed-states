@@ -26,7 +26,6 @@ git:
     - recurse:
       - user
       - group
-      - mode
 
     - require:
       - pkg: git
