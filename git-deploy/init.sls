@@ -37,6 +37,7 @@ git:
 git init --bare:
   cmd.wait:
     - cwd: /var/git
+    - unless: test -e /var/git/config
     - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - require:
