@@ -6,19 +6,11 @@ git:
     - name: git
   {% endif %}
 
-  user.present:
-    - require:
-      - group: git
-    - groups:
-      - git
-
-  group.present:
-    - system: True
 
 /var/git:
   file.directory:
-    - user: git
-    - group: git
+    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
+    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
     - mode: 755
     - makedirs: True
     - recurse:
@@ -27,8 +19,6 @@ git:
       - mode
     - require:
       - pkg: git
-      - user: git
-      - group: git
     - watch_in:
       - cmd: git init --bare
 
@@ -37,6 +27,14 @@ git init --bare:
     - cwd: /var/git
     - require:
       - file: /var/git
-      - user: git
-      - group: git
 
+/var/git/hooks/post-receive:
+  file.managed:
+    - source: salt://git-deploy/files/post-receive
+    - template: jinja
+    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
+    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'vagrant') }}
+    - mode: 755
+    - require:
+      - file: /var/git
+      - cmd: git init --bare
