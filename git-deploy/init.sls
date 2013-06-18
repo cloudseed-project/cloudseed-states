@@ -17,7 +17,6 @@ git:
     - system: True
 
 
-
 /var/git:
   file.directory:
     - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
@@ -28,14 +27,18 @@ git:
       - user
       - group
       - mode
+
     - require:
       - pkg: git
+
     - watch_in:
       - cmd: git init --bare
 
 git init --bare:
   cmd.wait:
     - cwd: /var/git
+    - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
+    - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - require:
       - file: /var/git
 
@@ -46,6 +49,7 @@ git init --bare:
     - user: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - group: {{ salt['pillar.get']('cloudseed:ssh_username', 'ubuntu') }}
     - mode: 755
+
     - require:
       - file: /var/git
       - cmd: git init --bare
