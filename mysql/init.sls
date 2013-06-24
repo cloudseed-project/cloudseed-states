@@ -2,7 +2,7 @@ mysql-server:
   pkg:
     - installed
   service:
-    - name: mysqld
+    - name: mysql
     - running
     - enable: True
     - require:
