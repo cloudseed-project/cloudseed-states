@@ -19,7 +19,7 @@ mysql.admin:
       - pkg: mysql-server
 
 {% for db in salt['pillar.get']('mysql:databases', []) %}
-mysql -uroot -p'{{ salt['pillar.get']('mysql:root_password', '') }}' -e "create database {{ each.name }}":
+mysql -uroot -p'{{ salt['pillar.get']('mysql:root_password', '') }}' -e "create database {{ db.name }}":
   cmd.run:
-    - unless: mysql -uroot -p'{{ salt['pillar.get']('mysql:root_password', '') }}' -e "use {{ each.name }}"
+    - unless: mysql -uroot -p'{{ salt['pillar.get']('mysql:root_password', '') }}' -e "use {{ db.name }}"
 {% endfor %}
