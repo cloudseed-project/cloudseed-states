@@ -10,3 +10,7 @@ base:
   'roles:git-deploy':
     - match: grain
     - git-deploy
+
+  'roles:mysql':
+    - match: grain
+    - mysql
