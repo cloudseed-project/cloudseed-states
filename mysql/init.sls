@@ -43,43 +43,29 @@ mysql.database.{{ db }}:
       - pkg: mysql-server
       - cmd: mysql.admin
 
-mysql.user.{{ db }}.{{ value.user }}.localhost:
-  cmd.run:
+mysql.user.{{ value.user }}.localhost:
+  cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('localhost') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
-    - require:
-      - pkg: mysql-server
-      - cmd: mysql.database.{{ db }}
-      - cmd: mysql.admin
     - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' -e "SELECT 1;"
+    - watch:
+      - cmd: mysql.database.{{ db }}
 
 mysql.grant.{{ db }}.{{ value.user }}.localhost:
   cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
-    - require:
-      - pkg: mysql-server
-      - cmd: mysql.database.{{ db }}
-      - cmd: mysql.admin
     - watch:
-      - cmd: mysql.user.{{ db }}.{{ value.user }}.localhost
+      - cmd: mysql.user.{{ value.user }}.localhost
 
-mysql.user.{{ db }}.{{ value.user }}:
+mysql.user.{{ value.user }}:
   cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('%') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
-    - require:
-      - pkg: mysql-server
-      - cmd: mysql.database.{{ db }}
-      - cmd: mysql.admin
     - watch:
-      - cmd: mysql.user.{{ db }}.{{ value.user }}.localhost
+      - cmd: mysql.user.{{ value.user }}.localhost
 
 mysql.grant.{{ db }}.{{ value.user }}:
   cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('%') }}';"
-    - require:
-      - pkg: mysql-server
-      - cmd: mysql.database.{{ db }}
-      - cmd: mysql.admin
     - watch:
-      - cmd: mysql.user.{{ db }}.{{ value.user }}
+      - cmd: mysql.user.{{ value.user }}
 
 {% endfor %}
