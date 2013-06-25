@@ -26,7 +26,7 @@ mysql.user.{{ value.user }}:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('localhost') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
     - require:
       - pkg: mysql-server
-    - unless: mysql -u{{ value.name }} -p'{{ value.password|default('') }}' status > /dev/null
+    - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' status > /dev/null
 
 mysql.database.{{ db }}:
   cmd.run:
