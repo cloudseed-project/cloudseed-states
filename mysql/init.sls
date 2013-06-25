@@ -19,6 +19,7 @@ mysql.admin:
     - require:
       - pkg: mysql-server
 
+
 {% for db, value in salt['pillar.get']('mysql:databases', {}).iteritems() %}
 
 mysql.database.{{ db }}:
@@ -47,17 +48,3 @@ mysql.grant.{{ value.user }}:
       - cmd: mysql.user.{{ value.user }}
 
 {% endfor %}
-
-/etc/mysql/my.cnf:
-  file.managed:
-    - source: salt://mysql/files/my.cnf
-    - user: root
-    - group: root
-    - mode: 644
-    - template: jinja
-
-    - watch_in:
-      - service: mysql-server
-
-    - require:
-        - pkg: mysql-server
