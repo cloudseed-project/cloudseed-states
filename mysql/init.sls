@@ -30,7 +30,7 @@ mysql.user.{{ value.user }}:
 
 mysql.database.{{ db }}:
   cmd.run:
-    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }}"
+    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }};"
     - unless: mysql -uroot -p'{{ root_password }}' -e "use {{ db }}"
     - require:
       - pkg: mysql-server
