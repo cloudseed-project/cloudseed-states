@@ -47,3 +47,17 @@ mysql.grant.{{ value.user }}:
       - cmd: mysql.user.{{ value.user }}
 
 {% endfor %}
+
+/etc/mysql/my.cnf:
+  file.managed:
+    - source: salt://mysql/files/my.cnf
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+
+    - watch_in:
+      - service: mysql
+
+    - require:
+        - pkg: mysql-server
