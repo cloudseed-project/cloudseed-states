@@ -7,7 +7,7 @@ mysql:
     <db_name_1>:
       user: <username>
       password: <password>
-      host: <optional>
+      host: <optional>  # Default %
       grant: <optional>  # Defaults to ALL PRIVILEGES
 
     <db_name_2>:

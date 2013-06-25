@@ -9,8 +9,6 @@ mysql-server:
     - enable: True
     - require:
       - pkg: mysql-server
-    - watch_in:
-        cmd: mysql.admin
 
 mysql.admin:
   cmd.run:
@@ -43,45 +41,45 @@ mysql.database.{{ db }}:
     - unless: mysql -uroot -p'{{ root_password }}' -e "use {{ db }}"
     - require:
       - pkg: mysql-server
+      - cmd: mysql.admin
 
-mysql.user.{{ value.user }}:
+mysql.user.{{ db }}.{{ value.user }}.localhost:
   cmd.run:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('localhost') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
-    - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' -e "SELECT COUNT(1);"
-    - watch_in:
-        - cmd: mysql.grant.{{ value.user }}
+      - cmd: mysql.admin
+    - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' -e "SELECT 1;"
 
-mysql.grant.{{ value.user }}:
+mysql.grant.{{ db }}.{{ value.user }}.localhost:
   cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
-      - cmd: mysql.user.{{ value.user }}
+      - cmd: mysql.admin
     - watch:
-      - cmd: mysql.user.{{ value.user }}
+      - cmd: mysql.user.{{ db }}.{{ value.user }}.localhost
 
-{% if grains['virtual'] == 'VirtualBox' %}
-mysql.user.vagrant.{{ value.user }}:
+mysql.user.{{ db }}.{{ value.user }}:
   cmd.wait:
-    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'%' IDENTIFIED BY '{{ value.password|default('') }}';"
+    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('%') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
     - require:
       - pkg: mysql-server
-      - cmd: mysql.user.{{ value.user }}
+      - cmd: mysql.database.{{ db }}
+      - cmd: mysql.admin
     - watch:
-        - cmd: mysql.user.{{ value.user }}
+      - cmd: mysql.user.{{ db }}.{{ value.user }}.localhost
 
-mysql.grant.vagrant.{{ value.user }}:
+mysql.grant.{{ db }}.{{ value.user }}:
   cmd.wait:
-    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'%';"
+    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('%') }}';"
     - require:
       - pkg: mysql-server
-      - cmd: mysql.user.vagrant.{{ value.user }}
+      - cmd: mysql.database.{{ db }}
+      - cmd: mysql.admin
     - watch:
-        - cmd: mysql.user.vagrant.{{ value.user }}
-{% endif %}
+      - cmd: mysql.user.{{ db }}.{{ value.user }}
 
 {% endfor %}
