@@ -21,23 +21,24 @@ mysql.admin:
 
 {% for db, value in salt['pillar.get']('mysql:databases', {}).iteritems() %}
 
+mysql.database.{{ db }}:
+  cmd.run:
+    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }};"
+    - unless: mysql -u root -p'{{ root_password }}' -e "use {{ db }}"
+    - require:
+      - pkg: mysql-server
+
 mysql.user.{{ value.user }}:
   cmd.run:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'{{ value.host|default('localhost') }}' IDENTIFIED BY '{{ value.password|default('') }}';"
     - require:
       - pkg: mysql-server
-    - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' status > /dev/null
-
-mysql.database.{{ db }}:
-  cmd.run:
-    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }};"
-    - unless: mysql -uroot -p'{{ root_password }}' -e "use {{ db }}"
-    - require:
-      - pkg: mysql-server
+      - cmd: mysql.database.{{ db }}
+    - unless: mysql -u {{ value.user }} -p'{{ value.password|default('') }} -e "SELECT COUNT(1)"'
 
 mysql.grant.{{ db }}:
   cmd.run:
-    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
+    - name: mysql -u root -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
