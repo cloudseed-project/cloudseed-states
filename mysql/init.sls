@@ -57,7 +57,7 @@ mysql.grant.{{ value.user }}:
     - template: jinja
 
     - watch_in:
-      - service: mysql
+      - service: mysql-server
 
     - require:
         - pkg: mysql-server
