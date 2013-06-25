@@ -61,5 +61,27 @@ mysql.grant.{{ value.user }}:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
       - cmd: mysql.user.{{ value.user }}
+    - watch:
+      - cmd: mysql.user.{{ value.user }}
+
+{% if grains['virtual'] == 'VirtualBox' %}
+mysql.user.vagrant.{{ value.user }}:
+  cmd.wait:
+    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE USER '{{ value.user }}'@'%' IDENTIFIED BY '{{ value.password|default('') }}';"
+    - require:
+      - pkg: mysql-server
+      - cmd: mysql.user.{{ value.user }}
+    - watch:
+        - cmd: mysql.user.{{ value.user }}
+
+mysql.grant.vagrant.{{ value.user }}:
+  cmd.wait:
+    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'%';"
+    - require:
+      - pkg: mysql-server
+      - cmd: mysql.user.vagrant.{{ value.user }}
+    - watch:
+        - cmd: mysql.user.vagrant.{{ value.user }}
+{% endif %}
 
 {% endfor %}
