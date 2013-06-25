@@ -16,3 +16,6 @@ mysql:
       host: <optional>
       grant: <optional>
 ```
+
+This does not require the MySQLdb Python module to execute.
+It uses some simple command line calls to do it's work.
