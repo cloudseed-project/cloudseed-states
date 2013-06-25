@@ -35,9 +35,11 @@ mysql.user.{{ value.user }}:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
     - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' -e "SELECT COUNT(1);"
+    - watch_in:
+        - cmd: mysql.grant.{{ value.user }}
 
-mysql.grant.{{ db }}:
-  cmd.run:
+mysql.grant.{{ value.user }}:
+  cmd.wait:
     - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
     - require:
       - pkg: mysql-server
