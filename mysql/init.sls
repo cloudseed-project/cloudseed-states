@@ -30,14 +30,14 @@ mysql.user.{{ value.user }}:
 
 mysql.database.{{ db }}:
   cmd.run:
-    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }}":
+    - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }}"
     - unless: mysql -uroot -p'{{ root_password }}' -e "use {{ db }}"
     - require:
       - pkg: mysql-server
 
 mysql.grant.{{ db }}:
   cmd.run:
-    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';":
+    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
