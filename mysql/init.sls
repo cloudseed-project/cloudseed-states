@@ -24,7 +24,7 @@ mysql.admin:
 mysql.database.{{ db }}:
   cmd.run:
     - name: mysql -uroot -p'{{ root_password }}' -e "CREATE DATABASE {{ db }};"
-    - unless: mysql -u root -p'{{ root_password }}' -e "use {{ db }}"
+    - unless: mysql -uroot -p'{{ root_password }}' -e "use {{ db }}"
     - require:
       - pkg: mysql-server
 
@@ -34,11 +34,11 @@ mysql.user.{{ value.user }}:
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
-    - unless: mysql -u {{ value.user }} -p'{{ value.password|default('') }} -e "SELECT COUNT(1)"'
+    - unless: mysql -u{{ value.user }} -p'{{ value.password|default('') }}' -e "SELECT COUNT(1);"
 
 mysql.grant.{{ db }}:
   cmd.run:
-    - name: mysql -u root -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
+    - name: mysql -uroot -p'{{ root_password }}' -e "GRANT {{ value.grant|default('ALL PRIVILEGES') }} ON {{ db }} . * TO '{{ value.user }}'@'{{ value.host|default('localhost') }}';"
     - require:
       - pkg: mysql-server
       - cmd: mysql.database.{{ db }}
