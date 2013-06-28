@@ -35,7 +35,7 @@ mysql.admin:
       - file: mysql.config
 
 
-{% for db, value in salt['pillar.get']('mysql:databases', {}).iteritems() %}
+{% for db, value in salt['pillar.get']('mysql', {}).iteritems() %}
 
 mysql.database.{{ db }}:
   cmd.run:
