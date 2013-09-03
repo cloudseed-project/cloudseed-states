@@ -58,5 +58,3 @@ postgresql.conf:
           - pkg: postgresql
       - watch_in:
         - service: postgresql
-
-
