@@ -18,7 +18,6 @@ postgresql.user.{{ value.user }}:
     - runas: postgres
     - require:
       - service: postgresql
-      - file: postgresql.conf
 
 postgresql.db.{{ db }}:
   postgres_database.present:
@@ -30,8 +29,7 @@ postgresql.db.{{ db }}:
     - owner: {{ value.user }}
     - runas: postgres
     - require:
-      - postgres_user: postgres.user.{{ value.user }}
-      - file: postgresql.conf
+      - postgres_user: postgresql.user.{{ value.user }}
 {% endfor %}
 
 postgresql.hba:
