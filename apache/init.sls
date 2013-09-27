@@ -6,8 +6,8 @@ apache:
   - name: httpd
   - running
   {% elif grains['os'] == 'Ubuntu' %}
-    - name: apache2
+    - name: apachetest
   service:
-  - name: apache2
+  - name: apachetest
   - running
   {% endif %}
