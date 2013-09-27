@@ -41,3 +41,7 @@ a2enmod rewrite:
     - onlyif: test -e /etc/apache2/mods-enabled/rewrite.load
     - watch_in:
       - service: apache
+
+foobar:
+  cmd.run:
+    - name: touch /tmp/helloworld
